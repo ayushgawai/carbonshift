@@ -1,0 +1,576 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  * {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  html {
+    font-size: 19px;
+  }
+
+  body {
+    @apply min-h-screen;
+    background: linear-gradient(160deg, #f0fdf4 0%, #ffffff 30%, #ecfdf5 60%, #f0fdf4 100%);
+    font-family: 'Inter', system-ui, sans-serif;
+    letter-spacing: -0.01em;
+    color: #1e293b;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: 'Space Grotesk', 'Inter', system-ui, sans-serif;
+    letter-spacing: 0.025em;
+  }
+}
+
+@layer components {
+  /* ── Bento card — light frosted glass with shine ──────────────────── */
+  .card {
+    @apply relative rounded-2xl p-6 transition-all duration-300;
+    background: rgba(255, 255, 255, 0.72);
+    backdrop-filter: blur(24px) saturate(1.4);
+    -webkit-backdrop-filter: blur(24px) saturate(1.4);
+    border: 1px solid rgba(0, 0, 0, 0.06);
+    border-top-color: rgba(255, 255, 255, 0.9);
+    box-shadow:
+      0 1px 2px rgba(0,0,0,0.04),
+      0 4px 16px rgba(0,0,0,0.04),
+      0 12px 40px rgba(16,185,129,0.03);
+    overflow: hidden;
+  }
+
+  .card::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      105deg,
+      transparent 35%,
+      rgba(255,255,255,0.5) 42%,
+      rgba(255,255,255,0.2) 48%,
+      transparent 55%
+    );
+    opacity: 0;
+    transform: translateX(-100%);
+    transition: opacity 0.3s ease;
+    pointer-events: none;
+    z-index: 2;
+    border-radius: inherit;
+  }
+
+  .card:hover::before {
+    opacity: 1;
+    animation: card-shine 0.6s ease forwards;
+  }
+
+  .card:hover {
+    transform: translateY(-2px);
+    box-shadow:
+      0 4px 8px rgba(0,0,0,0.06),
+      0 12px 32px rgba(0,0,0,0.06),
+      0 20px 60px rgba(16,185,129,0.06);
+    border-color: rgba(16,185,129,0.12);
+  }
+
+  @keyframes card-shine {
+    0%   { transform: translateX(-100%); }
+    100% { transform: translateX(100%); }
+  }
+
+  /* ── Glass card variant ────────────────────────────────────────────── */
+  .card-glass {
+    @apply relative rounded-2xl p-6 transition-all duration-300;
+    background: rgba(255, 255, 255, 0.72);
+    backdrop-filter: blur(24px) saturate(1.4);
+    -webkit-backdrop-filter: blur(24px) saturate(1.4);
+    border: 1px solid rgba(0, 0, 0, 0.06);
+    border-top-color: rgba(255, 255, 255, 0.9);
+    box-shadow:
+      0 1px 2px rgba(0,0,0,0.04),
+      0 4px 16px rgba(0,0,0,0.04),
+      0 12px 40px rgba(16,185,129,0.03);
+    overflow: hidden;
+  }
+
+  .card-glass:hover {
+    transform: translateY(-2px);
+    box-shadow:
+      0 4px 8px rgba(0,0,0,0.06),
+      0 12px 32px rgba(0,0,0,0.06),
+      0 20px 60px rgba(16,185,129,0.06);
+    border-color: rgba(16,185,129,0.12);
+  }
+
+  /* ── Rotating border beam — light mode ─────────────────────────────── */
+  .card-gradient-border {
+    @apply absolute inset-0 rounded-2xl pointer-events-none;
+    padding: 1px;
+    background: conic-gradient(
+      from var(--beam-angle, 0deg),
+      transparent 0%,
+      rgba(16,185,129,0.12) 10%,
+      transparent 20%,
+      transparent 100%
+    );
+    -webkit-mask:
+      linear-gradient(#fff 0 0) content-box,
+      linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    z-index: 0;
+    animation: border-beam 8s linear infinite;
+  }
+
+  @keyframes border-beam {
+    from { --beam-angle: 0deg; }
+    to   { --beam-angle: 360deg; }
+  }
+
+  @property --beam-angle {
+    syntax: '<angle>';
+    inherits: false;
+    initial-value: 0deg;
+  }
+
+  /* ── Metric value animations ─────────────────────────────────────── */
+  .metric-pulse {
+    animation: metric-pulse 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+
+  @keyframes metric-pulse {
+    0%   { transform: scale(1); }
+    40%  { transform: scale(1.015); }
+    100% { transform: scale(1); }
+  }
+
+  .value-flash {
+    animation: value-flash 0.5s ease-out;
+  }
+
+  @keyframes value-flash {
+    0%   { opacity: 1; text-shadow: 0 0 8px rgba(16,185,129,0.3); }
+    30%  { opacity: 0.7; text-shadow: none; }
+    100% { opacity: 1; text-shadow: none; }
+  }
+
+  /* ── Live data ripple (expanding concentric rings) ─────────────── */
+  .live-ripple {
+    position: relative;
+  }
+
+  .live-ripple::before,
+  .live-ripple::after {
+    content: '';
+    position: absolute;
+    inset: -4px;
+    border-radius: inherit;
+    border: 1px solid rgba(16,185,129,0.15);
+    animation: ripple-expand 3s ease-out infinite;
+    pointer-events: none;
+  }
+
+  .live-ripple::after {
+    animation-delay: 1.5s;
+  }
+
+  @keyframes ripple-expand {
+    0%   { transform: scale(1); opacity: 0.6; }
+    100% { transform: scale(1.15); opacity: 0; }
+  }
+
+  /* ── Status-based outer glow ──────────────────────────────────────── */
+  .dashboard-glow {
+    transition: box-shadow 1s ease;
+  }
+
+  .glow-running {
+    box-shadow:
+      inset 0 0 120px -40px rgba(16, 185, 129, 0.08),
+      inset 0 -80px 100px -60px rgba(16, 185, 129, 0.04);
+  }
+
+  .glow-paused {
+    box-shadow:
+      inset 0 0 120px -40px rgba(245, 158, 11, 0.1),
+      inset 0 -80px 100px -60px rgba(245, 158, 11, 0.05);
+  }
+
+  .glow-completed {
+    box-shadow:
+      inset 0 0 120px -40px rgba(59, 130, 246, 0.08),
+      inset 0 -80px 100px -60px rgba(59, 130, 246, 0.04);
+    animation: completed-shimmer 3s ease-in-out infinite;
+  }
+
+  @keyframes completed-shimmer {
+    0%, 100% { box-shadow: inset 0 0 120px -40px rgba(59,130,246,0.08); }
+    50%      { box-shadow: inset 0 0 160px -30px rgba(59,130,246,0.12); }
+  }
+
+  .glow-idle {
+    box-shadow: none;
+  }
+
+  /* ── Breathing neon glow for danger state ─────────────────────────── */
+  .neon-breathe-red {
+    animation: neon-breathe 2.5s ease-in-out infinite;
+  }
+
+  @keyframes neon-breathe {
+    0%, 100% {
+      box-shadow:
+        0 0 8px rgba(239,68,68,0.06),
+        inset 0 0 0 1px rgba(239,68,68,0.08);
+    }
+    50% {
+      box-shadow:
+        0 0 20px rgba(239,68,68,0.12),
+        0 0 40px rgba(239,68,68,0.04),
+        inset 0 0 0 1px rgba(239,68,68,0.15);
+    }
+  }
+
+  /* ── Dynamic aura breathing ────────────────────────────────────── */
+  .aura-breathe {
+    animation: aura-pulse 4s ease-in-out infinite;
+  }
+
+  @keyframes aura-pulse {
+    0%, 100% { opacity: 0.4; }
+    50%      { opacity: 1; }
+  }
+
+  /* ── Glitch overlay ──────────────────────────────────────────────── */
+  .glitch-vignette {
+    animation: glitch-flash 0.5s ease-out forwards;
+    background: radial-gradient(
+      ellipse at center,
+      transparent 40%,
+      rgba(239, 68, 68, 0.1) 100%
+    );
+  }
+
+  @keyframes glitch-flash {
+    0%   { opacity: 1; }
+    20%  { opacity: 0.9; }
+    50%  { opacity: 0.7; }
+    100% { opacity: 0; }
+  }
+
+  /* ── GPU fire flicker ────────────────────────────────────────────── */
+  .gpu-fire-flicker {
+    animation: fire-flicker 0.3s ease-in-out infinite alternate;
+  }
+
+  @keyframes fire-flicker {
+    0%   { opacity: 1; filter: brightness(1); }
+    33%  { opacity: 0.88; filter: brightness(1.15); }
+    66%  { opacity: 0.95; filter: brightness(1.05); }
+    100% { opacity: 0.85; filter: brightness(1.2); }
+  }
+
+  /* ── Terminal / System Logs styling ──────────────────────────────── */
+  .terminal-text {
+    font-family: 'Fira Code', 'SF Mono', 'Courier New', monospace;
+    font-size: 11px;
+    line-height: 1.6;
+  }
+
+  .terminal-line-enter {
+    animation: terminal-slide 0.3s ease-out;
+  }
+
+  @keyframes terminal-slide {
+    0%   { opacity: 0; transform: translateY(6px); }
+    100% { opacity: 1; transform: translateY(0); }
+  }
+
+  /* ── Victory overlay ─────────────────────────────────────────────── */
+  .victory-enter {
+    animation: victory-in 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  @keyframes victory-in {
+    0%   { opacity: 0; transform: scale(0.85) translateY(20px); }
+    100% { opacity: 1; transform: scale(1) translateY(0); }
+  }
+
+  .certificate-btn {
+    transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .certificate-btn:hover {
+    transform: perspective(600px) rotateX(-2deg) rotateY(2deg) translateY(-2px);
+    box-shadow:
+      0 12px 24px -6px rgba(16, 185, 129, 0.3),
+      0 0 20px -4px rgba(16, 185, 129, 0.15);
+  }
+
+  /* ── What-If slider (range input) ─────────────────────────────── */
+  .whatif-slider {
+    -webkit-appearance: none;
+    appearance: none;
+    height: 4px;
+    border-radius: 999px;
+    background: rgba(0, 0, 0, 0.06);
+    outline: none;
+    cursor: pointer;
+  }
+
+  .whatif-slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    background: #10b981;
+    border: 2px solid white;
+    box-shadow: 0 0 8px rgba(16, 185, 129, 0.4), 0 1px 4px rgba(0,0,0,0.15);
+    cursor: grab;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+  }
+
+  .whatif-slider::-webkit-slider-thumb:hover {
+    transform: scale(1.15);
+    box-shadow: 0 0 14px rgba(16, 185, 129, 0.5), 0 2px 6px rgba(0,0,0,0.2);
+  }
+
+  .whatif-slider::-webkit-slider-thumb:active {
+    cursor: grabbing;
+    transform: scale(1.05);
+  }
+
+  .whatif-slider::-moz-range-thumb {
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    background: #10b981;
+    border: 2px solid white;
+    box-shadow: 0 0 8px rgba(16, 185, 129, 0.4), 0 1px 4px rgba(0,0,0,0.15);
+    cursor: grab;
+  }
+
+  .whatif-slider::-moz-range-track {
+    height: 4px;
+    border-radius: 999px;
+    background: rgba(0, 0, 0, 0.06);
+  }
+
+  /* ── Domain focus mode transitions ────────────────────────────── */
+  .focus-section {
+    transition: opacity 0.5s cubic-bezier(0.4, 0, 0.2, 1),
+                transform 0.5s cubic-bezier(0.4, 0, 0.2, 1),
+                filter 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .focus-dimmed {
+    opacity: 0.25;
+    transform: scale(0.995);
+    filter: grayscale(0.3) brightness(0.9);
+    pointer-events: auto;
+  }
+
+  .focus-highlighted {
+    opacity: 1;
+    transform: scale(1);
+    filter: none;
+  }
+}
+
+/* ── Screen shake ────────────────────────────────────────────────────── */
+.screen-shake {
+  animation: screen-shake 0.4s ease-out;
+}
+
+@keyframes screen-shake {
+  0%, 100% { transform: translate(0); }
+  10%  { transform: translate(-3px, 1px); }
+  20%  { transform: translate(3px, -2px); }
+  30%  { transform: translate(-2px, 2px); }
+  40%  { transform: translate(2px, -1px); }
+  50%  { transform: translate(-1px, 1px); }
+  60%  { transform: translate(0); }
+}
+
+/* ── SVG spin ────────────────────────────────────────────────────────── */
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
+
+@layer utilities {
+  .text-gradient {
+    @apply bg-clip-text text-transparent bg-gradient-to-r;
+  }
+}
+
+/* ── CarbonShift logo animations ──────────────────────────────────── */
+.logo-ring {
+  animation: logo-ring-spin 8s linear infinite;
+}
+
+@keyframes logo-ring-spin {
+  0%   { transform: rotate(0deg); border-color: rgba(255,255,255,0.25); }
+  50%  { border-color: rgba(255,255,255,0.5); }
+  100% { transform: rotate(360deg); border-color: rgba(255,255,255,0.25); }
+}
+
+.logo-pulse {
+  animation: logo-pulse 3s ease-in-out infinite;
+}
+
+@keyframes logo-pulse {
+  0%, 100% { opacity: 0.1; transform: scale(1); }
+  50%      { opacity: 0.3; transform: scale(1.06); }
+}
+
+.logo-mark {
+  transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1),
+              box-shadow 0.3s ease;
+}
+
+.logo-mark:hover {
+  transform: scale(1.06) rotate(-3deg);
+  box-shadow:
+    0 0 20px rgba(16,185,129,0.3),
+    0 0 40px rgba(16,185,129,0.1);
+}
+
+/* ── Logo shimmer ────────────────────────────────────────────────────── */
+.logo-shimmer {
+  position: relative;
+  overflow: hidden;
+}
+
+.logo-shimmer::after {
+  content: '';
+  position: absolute;
+  inset: -50% -50%;
+  background: linear-gradient(
+    105deg,
+    transparent 40%,
+    rgba(255,255,255,0.4) 45%,
+    rgba(255,255,255,0.1) 50%,
+    transparent 55%
+  );
+  animation: logo-shimmer-sweep 8s ease-in-out infinite;
+  pointer-events: none;
+  border-radius: inherit;
+}
+
+@keyframes logo-shimmer-sweep {
+  0%, 80%  { transform: translateX(-120%); }
+  100%     { transform: translateX(120%); }
+}
+
+/* ── Animated gradient accent bar (header bottom) ────────────────────── */
+.header-accent-bar {
+  height: 2px;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(16,185,129,0) 10%,
+    rgba(16,185,129,0.6) 30%,
+    rgba(52,211,153,0.8) 50%,
+    rgba(110,231,183,0.6) 70%,
+    rgba(16,185,129,0) 90%,
+    transparent 100%
+  );
+  background-size: 200% 100%;
+  animation: accent-flow 4s ease-in-out infinite;
+}
+
+@keyframes accent-flow {
+  0%, 100% { background-position: 0% 0%; }
+  50%      { background-position: 100% 0%; }
+}
+
+/* ── Floating badge glow pulse ───────────────────────────────────────── */
+.badge-glow {
+  animation: badge-glow-pulse 3s ease-in-out infinite;
+}
+
+@keyframes badge-glow-pulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(16,185,129,0); }
+  50%      { box-shadow: 0 0 12px -2px rgba(16,185,129,0.15); }
+}
+
+/* ── Decorative floating element animations ──────────────────────────── */
+.float-slow {
+  animation: float-slow 20s ease-in-out infinite;
+}
+
+.float-medium {
+  animation: float-medium 14s ease-in-out infinite;
+}
+
+.float-fast {
+  animation: float-fast 8s ease-in-out infinite;
+}
+
+@keyframes float-slow {
+  0%, 100% { transform: translate(0, 0) rotate(0deg); }
+  25%      { transform: translate(12px, -18px) rotate(3deg); }
+  50%      { transform: translate(-8px, -30px) rotate(-2deg); }
+  75%      { transform: translate(15px, -12px) rotate(4deg); }
+}
+
+@keyframes float-medium {
+  0%, 100% { transform: translate(0, 0) rotate(0deg); }
+  33%      { transform: translate(-15px, -20px) rotate(-5deg); }
+  66%      { transform: translate(10px, -35px) rotate(3deg); }
+}
+
+@keyframes float-fast {
+  0%, 100% { transform: translate(0, 0); }
+  50%      { transform: translate(8px, -15px); }
+}
+
+/* ── Gradient text animation ─────────────────────────────────────────── */
+.text-gradient-animated {
+  background: linear-gradient(
+    135deg,
+    #064e3b 0%,
+    #10b981 25%,
+    #065f46 50%,
+    #34d399 75%,
+    #064e3b 100%
+  );
+  background-size: 300% 300%;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: gradient-text-flow 6s ease infinite;
+}
+
+@keyframes gradient-text-flow {
+  0%, 100% { background-position: 0% 50%; }
+  50%      { background-position: 100% 50%; }
+}
+
+/* ── Recharts tooltip ──────────────────────────────────────────────── */
+.recharts-tooltip-wrapper {
+  outline: none !important;
+}
+
+/* Scrollbar — light */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(0, 0, 0, 0.1);
+  border-radius: 9999px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(0, 0, 0, 0.2);
+}
