@@ -6,13 +6,13 @@
 # ============================================================================
 
 # Web Framework & API
-fastapi==0.109.0
-uvicorn[standard]==0.27.0
-websockets==12.0
-python-multipart==0.0.9
+fastapi>=0.109.0
+uvicorn[standard]>=0.27.0
+websockets>=12.0
+python-multipart>=0.0.9
 
 # HTTP Client
-httpx==0.26.0
+httpx>=0.26.0
 
 # Environment Variables
 python-dotenv==1.0.0
@@ -22,15 +22,15 @@ python-dotenv==1.0.0
 # ============================================================================
 
 # NVIDIA GPU Management
-pynvml==11.5.0
+nvidia-ml-py>=11.5.0
 
 # ============================================================================
 # MACHINE LEARNING & AI
 # ============================================================================
 
 # PyTorch (CPU/CUDA compatible)
-torch==2.1.0
-torchvision==0.16.0
+torch>=2.1.0
+torchvision>=0.16.0
 
 # Hugging Face Transformers
 transformers==4.36.0
@@ -49,10 +49,10 @@ Pillow==10.2.0
 # ============================================================================
 
 # OpenAI
-openai==1.10.0
+openai>=1.10.0
 
 # Anthropic Claude
-anthropic==0.18.0
+anthropic>=0.18.0
 
 # ============================================================================
 # DATA & UTILITIES
@@ -68,14 +68,14 @@ asyncio==3.4.3
 loguru==0.7.2
 
 # JSON handling
-pydantic==2.5.3
+pydantic>=2.5.0
 
 # ============================================================================
 # FETCH.AI (Autonomous Agents)
 # ============================================================================
 
 # Fetch.ai uAgents SDK - Now integrated and active!
-uagents==0.20.1
+uagents>=0.20.0
 
 # ============================================================================
 # DEVELOPMENT & TESTING (Optional)
