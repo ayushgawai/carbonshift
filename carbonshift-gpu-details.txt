@@ -1,0 +1,32 @@
+NVIDIA BREV GPU INSTANCE DETAILS
+================================
+Created: Feb 14, 2026
+Cost: $1.44/hour
+
+Instance Details:
+- Name: treehacks-carbonshift
+- ID: fd0pwxkdo
+- Status: RUNNING
+- Shell: READY
+
+Connection:
+- Command: brev shell fd0pwxkdo
+- OR: brev ssh fd0pwxkdo
+
+GPU Specs:
+- Type: A100 80GB (NVIDIA Ampere)
+- Machine: massedcompute_A100_80G
+- GPU Memory: 80GB
+
+Quick Commands:
+- List instances: brev ls
+- Connect: brev shell fd0pwxkdo
+- Stop: brev stop fd0pwxkdo
+- Start: brev start fd0pwxkdo
+- Delete: brev delete fd0pwxkdo
+
+Estimated Budget:
+- $40 credit = ~27 hours
+- Testing: 2-3 hours ($4-5)
+- Demo day: Keep running 4 hours ($6)
+- Total safe usage: ~20 hours
