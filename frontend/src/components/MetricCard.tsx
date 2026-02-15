@@ -88,7 +88,7 @@ export function MetricCard({
         {/* Value — large monospace */}
         <div className="flex items-baseline gap-2">
           <span
-            className={`text-4xl sm:text-5xl font-bold font-mono tabular-nums tracking-tight text-gray-900 ${
+            className={`text-3xl sm:text-4xl font-bold font-mono tabular-nums tracking-tight text-gray-900 ${
               isValueFlashing ? 'value-flash' : ''
             }`}
           >

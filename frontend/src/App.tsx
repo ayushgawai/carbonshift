@@ -230,7 +230,7 @@ export function App() {
 
             {/* Main content — 70/30 two-column layout */}
             <motion.main
-              className="w-full px-4 sm:px-6 lg:px-8 py-8"
+              className="w-full px-4 sm:px-6 lg:px-8 py-12 mt-4"
               variants={staggerContainer}
               initial="hidden"
               animate="show"
@@ -430,7 +430,7 @@ export function App() {
                   <div className="flex items-center gap-2">
                     <div className="w-1 h-1 rounded-full bg-emerald-400/30" />
                     <p className="text-[10px] text-gray-300 tracking-wide">
-                      CarbonShift &middot; TreeHacks 2025
+                      CarbonShift &middot; TreeHacks 2026
                     </p>
                     <div className="w-1 h-1 rounded-full bg-emerald-400/30" />
                   </div>

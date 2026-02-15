@@ -168,32 +168,34 @@ async def collect_metrics() -> dict:
         # Timestamp
         "timestamp": grid_data.get("timestamp", ""),
 
-        # Grid data
-        "electricity_price_usd_per_mwh": grid_data.get("electricity_price", 0),
-        "carbon_intensity_gco2_per_kwh": grid_data.get("carbon_intensity", 0),
+        # Grid data (frontend format)
+        "electricity_price": grid_data.get("electricity_price", 0),
+        "carbon_intensity": grid_data.get("carbon_intensity", 0),
 
-        # GPU metrics
+        # GPU metrics (frontend format)
         "gpu_power_watts": gpu_stats["power_usage_watts"],
-        "gpu_power_limit_watts": gpu_stats["power_limit_watts"],
-        "gpu_temperature_c": gpu_stats["temperature_c"],
-        "gpu_utilization_percent": gpu_stats["gpu_utilization_percent"],
+        "gpu_power_limit": gpu_stats["power_limit_watts"],
 
         # Orchestrator state
         "orchestrator_state": decision.state if decision else "UNKNOWN",
         "orchestrator_action": decision.action if decision else "UNKNOWN",
         "orchestrator_reason": decision.reason if decision else "",
 
-        # Training progress
+        # Training progress (frontend format)
         "training_status": training_status,
-        "training_progress_percent": training_progress["progress_percent"],
-        "training_epoch": training_progress["current_epoch"],
-        "training_total_epochs": training_progress["total_epochs"],
-        "training_loss": training_progress["training_loss"],
+        "training_progress": training_progress["progress_percent"],
+        "current_epoch": training_progress["current_epoch"],
+        "total_epochs": training_progress["total_epochs"],
 
-        # Savings
-        "total_cost_saved_usd": savings["total_cost_saved_usd"],
-        "total_carbon_saved_kg": savings["total_carbon_saved_kg"],
-        "peaks_avoided_count": savings["peaks_avoided_count"],
+        # Savings (frontend format)
+        "total_cost_saved": savings["total_cost_saved_usd"],
+        "total_carbon_saved": savings["total_carbon_saved_kg"],
+        "peaks_avoided": savings["peaks_avoided_count"],
+
+        # Additional backend-specific fields (for API endpoints)
+        "gpu_temperature_c": gpu_stats["temperature_c"],
+        "gpu_utilization_percent": gpu_stats["gpu_utilization_percent"],
+        "training_loss": training_progress["training_loss"],
     }
 
 
@@ -221,6 +223,15 @@ async def lifespan(app: FastAPI):
         logger.info("✅ Fetch.ai Agent running and connected to network")
     else:
         logger.warning("⚠️  Fetch.ai Agent not started (credentials missing or error)")
+
+    # Backfill 24h historical data for charts
+    logger.info("📊 Backfilling 24h historical data from CAISO patterns...")
+    try:
+        from backfill_history import backfill_24h_history
+        await backfill_24h_history(metrics_history)
+        logger.info(f"✅ Historical data ready: {len(metrics_history.history)} datapoints")
+    except Exception as e:
+        logger.warning(f"⚠️  Backfill failed: {e} - charts will populate gradually")
 
     # Start background tasks
     system_state.is_running = True
